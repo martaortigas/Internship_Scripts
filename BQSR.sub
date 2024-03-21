@@ -1,0 +1,37 @@
+#!/bin/bash -x
+#SBATCH --job-name="bqsr"
+#SBATCH --cpus-per-task=5
+#SBATCH --mem=80G
+#SBATCH --output=/home/mortigas/outerr/bqsr_%j.out
+#SBATCH --error=/home/mortigas/outerr/bqsr_%j.err
+#SBATCH --partition=general
+
+module load gatk/4.1.6
+module load lmod/7.6.12
+
+OUTPATH=/scratch/125-emmer/MartaOrtigas/Output_BQSR
+REFERENCE=/projects/125-emmer/durum_ref/Triticum_turgidum.Svevo.v1.dna_rm.toplevel.fa
+KSITES_COMP="MODIFIED_all_emmer.biallSNP.hardfiltPASS_maxmis09.nooutl_NATChr.NOhetpositions.mac3maxmis09.rename_artChr.g.vcf.gz"
+DIR=/scratch/125-emmer/MartaOrtigas
+KSITES="KSITES"
+
+cd $DIR
+zcat ${KSITES_COMP} > ${KSITES}.vcf
+gatk IndexFeatureFile -I KSITES.vcf
+
+for INPUT_FILE in /scratch/125-emmer/exome_capture/*merged_sorted_dupMarked_RG.bam*
+do
+	#First, we get the indID of the file
+	indID=$(echo $INPUT_FILE | cut -f5 -d'/' | cut -f1 -d'_')
+
+	#Run BaseRecalibrator
+	gatk --java-options "-Xmx80g -Xms80g" BaseRecalibrator -I ${INPUT_FILE} -R ${REFERENCE} --known-sites ${KSITES}.vcf -O ${OUTPATH}/${indID}_recal_data.table
+
+	#Run ApplyBQSR
+	gatk --java-options "-Xmx80g -Xms80g" ApplyBQSR -R ${REFERENCE} -I ${INPUT_FILE} --bqsr-recal-file ${OUTPATH}/${indID}_recal_data.table -O ${OUTPATH}/${indID}_merged_recal_sorted_dupMarked_RG.bam
+
+done
+
+module unload gatk/4.1.6
+module unload lmod/7.6.12
+
