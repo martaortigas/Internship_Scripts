@@ -6,6 +6,7 @@
 #SBATCH --output=/home/mortigas/outerr/processBam_%j.out
 #SBATCH --error=/home/mortigas/outerr/processBam_%j.err
 
+####### processBam #######
 
 #Run MapDamage on a single end bam file
 
