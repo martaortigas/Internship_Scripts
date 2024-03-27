@@ -4,7 +4,9 @@
 ####################################################################################################
 
 ####### seqPipeline #######
-
+#This script assigns some variables to then use them when calling a second script, the processBam.sub script.
+#Some lines are deactivated with "#" because there where not needed to be executed.
+#Only the job "jid4" is performed.
 
 # usage > loop.sh fname
 #Needed folders are created to store outputs.
