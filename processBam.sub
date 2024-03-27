@@ -7,6 +7,8 @@
 #SBATCH --error=/home/mortigas/outerr/processBam_%j.err
 
 ####### processBam #######
+#This script uses the modules Picard and Samtools to replace read groups in a BAM file and create an index for the resulting BAM file, respectively.
+#Then, the script runs another Picard command to validate the generated BAM file.
 
 #Run MapDamage on a single end bam file
 
