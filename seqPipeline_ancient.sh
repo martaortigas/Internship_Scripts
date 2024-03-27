@@ -3,6 +3,9 @@
 #The objective of this bash script is to call the pipeline.sub script n times, one for each sample.#
 ####################################################################################################
 
+####### seqPipeline #######
+
+
 # usage > loop.sh fname
 #Needed folders are created to store outputs.
 
